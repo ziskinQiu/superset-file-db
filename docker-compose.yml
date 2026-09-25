@@ -1,0 +1,29 @@
+services:
+  pg-db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: superset_metadata
+      POSTGRES_USER: superset_meta
+      POSTGRES_PASSWORD: superset_meta_pass
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U superset_meta -d superset_metadata"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+
+  superset:
+    build: .
+    ports:
+      - "8088:8088"
+    environment:
+      FILE_DB_UPLOAD_ROOT: /data/uploads
+    volumes:
+      - ./data/uploads:/data/uploads
+    depends_on:
+      pg-db:
+        condition: service_healthy
+
+volumes:
+  pgdata:

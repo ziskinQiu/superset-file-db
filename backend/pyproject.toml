@@ -1,0 +1,24 @@
+[project]
+name = "my_org-file_db"
+version = "0.1.0"
+license = "Apache-2.0"
+dependencies = [
+    "duckdb>=1.0.0",
+    "pandas>=2.0.0",
+    "openpyxl>=3.1.0",
+    "chardet>=5.0.0",
+    "xlrd>=2.0",
+    "pyarrow>=14.0.0",
+]
+
+[project.entry-points."sqlalchemy.dialects"]
+filedb = "my_org.file_db.dialect:FileDBDialect"
+
+[tool.apache_superset_extensions.build]
+include = [
+    "src/my_org/file_db/**/*.py",
+]
+exclude = []
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
